@@ -7,7 +7,8 @@ from pathlib import Path
 
 from riskpilot.harness.context import ProductScenario, RuntimeContext
 from riskpilot.infrastructure.evidence_store import ReplayEvidenceRepository
-from riskpilot.tools import GetVisibleSnapshotTool, VerifyEvidenceTool
+from riskpilot.tools import ExtractRiskInputsTool, GetVisibleSnapshotTool, VerifyEvidenceTool
+from backend.risk_engine import calculate_atr_from_closes, find_key_support
 
 
 class EvidenceToolTests(unittest.TestCase):
@@ -16,10 +17,14 @@ class EvidenceToolTests(unittest.TestCase):
         root = Path(self.temp_dir.name)
         folder = root / "600000"
         folder.mkdir()
+        visible_lines = [
+            f"2025-04-{day:02d},{day},{day + 0.5},{day + 0.6},{day - 0.1},{1000 + day}"
+            for day in range(16, 31)
+        ]
         price_bytes = (
             "日期,开盘,收盘,最高,最低,成交量\n"
-            "2025-04-30,10,10.5,10.6,9.9,1000\n"
-            "2025-05-06,10.6,11,11.2,10.5,1200\n"
+            + "\n".join(visible_lines)
+            + "\n2025-05-06,31,31.5,31.6,30.9,1200\n"
         ).encode("utf-8")
         (folder / "price_daily.csv").write_bytes(price_bytes)
         manifest = {
@@ -38,7 +43,8 @@ class EvidenceToolTests(unittest.TestCase):
             ],
             "sha256": {"price_daily.csv": hashlib.sha256(price_bytes).hexdigest()},
         }
-        (folder / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+        self.manifest_path = folder / "manifest.json"
+        self.manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
         self.price_path = folder / "price_daily.csv"
         self.repository = ReplayEvidenceRepository(root)
         self.context = RuntimeContext(
@@ -58,7 +64,10 @@ class EvidenceToolTests(unittest.TestCase):
             self.context, {"stock_code": "600000"}
         )
         self.assertTrue(response.success)
-        self.assertEqual([row["日期"] for row in response.data["prices"]], ["2025-04-30"])
+        dates = [row["日期"] for row in response.data["prices"]]
+        self.assertEqual(len(dates), 15)
+        self.assertEqual(dates[-1], "2025-04-30")
+        self.assertTrue(all(date <= "2025-04-30" for date in dates))
         self.assertEqual([item["title"] for item in response.data["documents"]], ["可见公告"])
         self.assertEqual(len(response.data["dividends"]), 1)
         self.assertEqual(response.meta.snapshot_id, "600000-2025-04-30")
@@ -93,6 +102,39 @@ class EvidenceToolTests(unittest.TestCase):
         )
         self.assertFalse(response.success)
         self.assertEqual(response.error.code, "evidence_unavailable")
+
+    def test_extract_risk_inputs_matches_v1_algorithms(self) -> None:
+        response = ExtractRiskInputsTool(self.repository).invoke(
+            self.context, {"stock_code": "600000"}
+        )
+        self.assertTrue(response.success)
+        snapshot = self.repository.visible_snapshot("600000", "2025-04-30")
+        highs = [float(row["最高"]) for row in snapshot["prices"]]
+        lows = [float(row["最低"]) for row in snapshot["prices"]]
+        closes = [float(row["收盘"]) for row in snapshot["prices"]]
+        self.assertEqual(response.data["current_price"], closes[-1])
+        self.assertEqual(
+            response.data["atr_14"],
+            calculate_atr_from_closes(highs, lows, closes, 14),
+        )
+        self.assertEqual(response.data["key_support"], find_key_support(closes, 20))
+        self.assertEqual(response.meta.rule_version, "market-features-v1")
+
+    def test_future_price_changes_cannot_change_extracted_inputs(self) -> None:
+        tool = ExtractRiskInputsTool(self.repository)
+        baseline = tool.invoke(self.context, {"stock_code": "600000"})
+
+        lines = self.price_path.read_text(encoding="utf-8").splitlines()
+        lines[-1] = "2025-05-06,98,99,100,97,9999"
+        changed = ("\n".join(lines) + "\n").encode("utf-8")
+        self.price_path.write_bytes(changed)
+        manifest = json.loads(self.manifest_path.read_text(encoding="utf-8"))
+        manifest["sha256"]["price_daily.csv"] = hashlib.sha256(changed).hexdigest()
+        self.manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+        mutated = tool.invoke(self.context, {"stock_code": "600000"})
+        self.assertTrue(mutated.success)
+        self.assertEqual(mutated.data, baseline.data)
 
 
 if __name__ == "__main__":

@@ -105,6 +105,7 @@ V1 当前包含：
 
 - [x] 定义 `EvidenceContext`。
 - [x] 创建 `get_visible_snapshot` 和 `verify_evidence` 工具。
+- [x] 创建 `extract_risk_inputs`，从可见快照确定性生成风险输入。
 - [x] 集中管理 `as_of` 和 `snapshot_id`。
 - [x] 增加未来信息泄漏测试。
 - [x] 记录数据来源、许可状态和哈希。

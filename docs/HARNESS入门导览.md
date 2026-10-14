@@ -63,6 +63,7 @@ Harness（上下文、注册中心、策略、审计）
 
 - `get_visible_snapshot` 只提供 `as_of` 当日及以前的数据。
 - `verify_evidence` 使用 SHA-256 检查文件完整性。
+- `extract_risk_inputs` 从已校验、已截断的快照计算收盘价、ATR 和关键支撑，客户端不再自行计算。
 - 数据来源和许可状态随结果返回；当前第三方样本统一标记为 `review_required`，不等于已经取得商业许可。
 
 ## 5. 四个最重要的编号

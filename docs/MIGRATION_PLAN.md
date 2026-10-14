@@ -84,12 +84,12 @@ V1 当前包含：
 
 任务：
 
-- [ ] 将风险计算整理为纯领域接口。
-- [ ] 创建 `calculate_risk_budget` 工具。
-- [ ] 增加工具输入和输出模型。
-- [ ] 返回 `tool_version`、`rule_version`、`snapshot_id` 和 `trace_id`。
-- [ ] 增加新旧实现一致性测试。
-- [ ] 保持原 API 可继续使用。
+- [x] 将风险计算整理为纯领域接口。
+- [x] 创建 `calculate_risk_budget` 工具。
+- [x] 增加工具输入和输出模型。
+- [x] 返回 `tool_version`、`rule_version`、`snapshot_id` 和 `trace_id`。
+- [x] 增加新旧实现一致性测试。
+- [x] 保持原 API 可继续使用。
 
 验收：
 

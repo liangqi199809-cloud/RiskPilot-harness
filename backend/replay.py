@@ -11,7 +11,10 @@ from typing import Literal
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field, model_validator
-from replay_analysis import analyze_at
+try:
+    from .replay_analysis import analyze_at
+except ImportError:  # Keep direct script and existing V1 imports compatible.
+    from replay_analysis import analyze_at
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / 'data' / 'replay'

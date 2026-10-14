@@ -203,11 +203,13 @@ python backend/main.py
 
 ## 测试
 
-```powershell
-python -m unittest discover -s tests -v
+```bash
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -r backend/requirements.lock.txt
+.venv/bin/python -m unittest discover -s tests -v
 ```
 
-测试覆盖风险预算、回放时间隔离、执行规则、数据完整性、排行榜服务端复算和结构化 API。当前公开版本全量 45 项测试通过。
+测试覆盖风险预算、回放时间隔离、执行规则、数据完整性、排行榜服务端复算和结构化 API。V2 建立基线时使用 Python 3.12 和锁定依赖完整复跑，全量 45 项测试通过。GitHub Actions 会在 `main`、`v2-harness` 的推送及 Pull Request 中自动执行相同测试。
 
 ## 数据、AI 与合规边界
 

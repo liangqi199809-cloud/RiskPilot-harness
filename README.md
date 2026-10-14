@@ -14,6 +14,11 @@ V2 的主要目标：
 - 支持微信小程序、网页和 WorkBuddy/MCP 等不同入口复用同一套核心能力。
 - 建立模型可替换、结果可追溯、规则可测试的评测体系。
 
+V2 设计文档：
+
+- [Harness 架构说明](./docs/HARNESS_ARCHITECTURE.md)
+- [V1 → V2 迁移计划](./docs/MIGRATION_PLAN.md)
+
 计划中的目标结构：
 
 ```text

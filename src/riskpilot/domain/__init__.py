@@ -2,6 +2,7 @@
 
 from riskpilot.domain.market_features import RiskInputFeatures, extract_risk_input_features
 from riskpilot.domain.replay_state import ReplayExperiment, ReplayState
+from riskpilot.domain.scoring import ReplayScore, UserProfile
 from riskpilot.domain.risk import (
     RiskBudgetInput,
     RiskBudgetOutput,
@@ -14,6 +15,8 @@ __all__ = [
     "RiskInputFeatures",
     "ReplayExperiment",
     "ReplayState",
+    "ReplayScore",
+    "UserProfile",
     "calculate_risk_budget",
     "extract_risk_input_features",
 ]

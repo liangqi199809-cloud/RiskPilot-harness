@@ -8,14 +8,17 @@ from riskpilot.tools.replay import (
     PreviewReplayPositionTool,
     SubmitReplayActionTool,
 )
+from riskpilot.tools.scoring import GetLeaderboardTool, SubmitReplayScoreTool
 
 __all__ = [
     "CalculateRiskBudgetTool",
     "ExtractRiskInputsTool",
     "GetVisibleSnapshotTool",
+    "GetLeaderboardTool",
     "DrawHistoryCaseTool",
     "PreviewReplayPositionTool",
     "SubmitReplayActionTool",
+    "SubmitReplayScoreTool",
     "VerifyEvidenceTool",
 ]
 

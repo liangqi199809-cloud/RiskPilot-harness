@@ -1,6 +1,7 @@
 """Adapters for databases, datasets, model providers, and external services."""
 
 from riskpilot.infrastructure.evidence_store import ReplayEvidenceRepository
+from riskpilot.infrastructure.leaderboard_store import SQLiteLeaderboardRepository
 from riskpilot.infrastructure.replay_sessions import (
     InMemoryReplaySessionRepository,
     SQLiteReplaySessionRepository,
@@ -9,6 +10,7 @@ from riskpilot.infrastructure.replay_sessions import (
 __all__ = [
     "InMemoryReplaySessionRepository",
     "ReplayEvidenceRepository",
+    "SQLiteLeaderboardRepository",
     "SQLiteReplaySessionRepository",
 ]
 

@@ -1,9 +1,14 @@
 import unittest
 from datetime import datetime, timezone
+import tempfile
+from pathlib import Path
 
 from backend.replay import Action, ReplayRequest, replay
 from riskpilot.harness.context import ProductScenario, RuntimeContext
-from riskpilot.infrastructure.replay_sessions import InMemoryReplaySessionRepository
+from riskpilot.infrastructure.replay_sessions import (
+    InMemoryReplaySessionRepository,
+    SQLiteReplaySessionRepository,
+)
 from riskpilot.tools import (
     DrawHistoryCaseTool,
     PreviewReplayPositionTool,
@@ -157,6 +162,54 @@ class ReplayStateToolTests(unittest.TestCase):
         self.assertEqual(response.data["step"], 17)
         self.assertEqual(response.data["state"], "finished")
         self.assertEqual(response.data["account"], expected["account"])
+
+    def test_sqlite_survives_repository_restart_and_backup(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            database = Path(directory) / "riskpilot.sqlite3"
+            first_repository = SQLiteReplaySessionRepository(database)
+            created = DrawHistoryCaseTool(first_repository).invoke(
+                self.owner,
+                {
+                    "stock_code": "601318",
+                    "decision_mode": "monthly",
+                    "capital": 100000,
+                    "max_loss": 90000,
+                },
+            )
+            experiment_id = created.data["experiment_id"]
+            first = SubmitReplayActionTool(first_repository).invoke(
+                self.owner,
+                {
+                    "experiment_id": experiment_id,
+                    "expected_step": 0,
+                    "target_value": 50000,
+                    "idempotency_key": "persistent-step-0",
+                },
+            )
+            self.assertTrue(first.success)
+
+            # Constructing a new repository simulates a process restart.
+            restarted_repository = SQLiteReplaySessionRepository(database)
+            restored = restarted_repository.get(experiment_id)
+            self.assertEqual(restored.step, 1)
+            self.assertEqual(restored.owner_id, self.owner.user_id)
+            self.assertIn("persistent-step-0", restored.idempotency_keys)
+
+            resumed = SubmitReplayActionTool(restarted_repository).invoke(
+                self.owner,
+                {
+                    "experiment_id": experiment_id,
+                    "expected_step": 1,
+                    "target_value": None,
+                    "idempotency_key": "persistent-step-1",
+                },
+            )
+            self.assertTrue(resumed.success)
+            self.assertEqual(resumed.data["step"], 2)
+
+            backup_path = restarted_repository.backup_to(Path(directory) / "backup.sqlite3")
+            backup_repository = SQLiteReplaySessionRepository(backup_path)
+            self.assertEqual(backup_repository.get(experiment_id).step, 2)
 
 
 if __name__ == "__main__":

@@ -28,5 +28,6 @@ backend/tmp/
 backend/run_archives/
 backend/leaderboard.json
 backend/leaderboard_data.json
+data/runtime/
 .DS_Store
 Thumbs.db

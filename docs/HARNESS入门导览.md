@@ -72,7 +72,7 @@ Harness（上下文、注册中心、策略、审计）
 - `preview_replay_position` 只做预览，不改变实验进度。
 - `submit_replay_action` 每次只接受当前关的一次操作，并由服务端推进进度。
 - `expected_step` 防止客户端跳关，`idempotency_key` 防止重复提交，所有权检查防止操作他人的实验。
-- 当前进度保存在服务进程内；Phase 5 将换成数据库，以支持服务重启后的长期恢复。
+- 当前实验进度保存在本地 SQLite，程序和电脑重启后仍可恢复；正式上线时可通过相同存储接口替换为 PostgreSQL。
 
 ## 5. 四个最重要的编号
 

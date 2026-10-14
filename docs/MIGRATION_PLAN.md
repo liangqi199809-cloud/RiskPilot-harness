@@ -65,12 +65,12 @@ V1 当前包含：
 
 任务：
 
-- [ ] 创建 `src/riskpilot/` 包。
-- [ ] 创建 `domain/`、`harness/`、`tools/`、`agents/`、`policies/` 和 `infrastructure/`。
-- [ ] 定义 `RuntimeContext`、工具响应和错误模型。
-- [ ] 定义 `ToolRegistry` 接口。
-- [ ] 定义 `PolicyGuard` 接口。
-- [ ] 增加骨架导入测试。
+- [x] 创建 `src/riskpilot/` 包。
+- [x] 创建 `domain/`、`harness/`、`tools/`、`agents/`、`policies/` 和 `infrastructure/`。
+- [x] 定义 `RuntimeContext`、工具响应和错误模型。
+- [x] 定义 `ToolRegistry` 接口。
+- [x] 定义 `PolicyGuard` 接口。
+- [x] 增加骨架导入测试。
 
 验收：
 

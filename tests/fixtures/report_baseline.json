@@ -1,0 +1,18 @@
+{
+  "real_standard": {
+    "request": {"stock_code": "601318", "capital": 100000, "max_loss": 3000},
+    "expected": {"current_price": 59.88, "status": "形成模拟研究计划", "vetoed": false, "final_shares": 500, "stop_loss_price": 57.2929, "final_position_value": 29940.0, "final_position_ratio": 29.94, "standard_loss": 1353.07, "risk_reward_ratio": 0.7, "stress_losses": [1353.07, 1925.57, 3643.05], "is_synthetic": false, "daily_points": 120}
+  },
+  "synthetic_standard": {
+    "request": {"stock_code": "002594", "capital": 100000, "max_loss": 3000},
+    "expected": {"current_price": 265.0, "status": "风险不匹配", "vetoed": true, "final_shares": 0, "stop_loss_price": 234.11, "final_position_value": 0.0, "final_position_ratio": 0.0, "standard_loss": 10.0, "risk_reward_ratio": 0.66, "stress_losses": [0], "is_synthetic": true, "daily_points": 120}
+  },
+  "insufficient_evidence": {
+    "request": {"stock_code": "600000", "capital": 100000, "max_loss": 3000},
+    "expected": {"current_price": 13.63, "status": "形成模拟研究计划", "vetoed": false, "final_shares": 2100, "stop_loss_price": 13.0543, "final_position_value": 28623.0, "final_position_ratio": 28.62, "standard_loss": 1265.91, "risk_reward_ratio": 1.15, "stress_losses": [1265.91, 1813.77, 3457.36], "is_synthetic": false, "daily_points": 120}
+  },
+  "risk_veto": {
+    "request": {"stock_code": "601318", "capital": 1000, "max_loss": 100},
+    "expected": {"current_price": 59.88, "status": "风险不匹配", "vetoed": true, "final_shares": 0, "stop_loss_price": 57.2929, "final_position_value": 0.0, "final_position_ratio": 0.0, "standard_loss": 10.0, "risk_reward_ratio": 0.7, "stress_losses": [0], "is_synthetic": false, "daily_points": 120}
+  }
+}

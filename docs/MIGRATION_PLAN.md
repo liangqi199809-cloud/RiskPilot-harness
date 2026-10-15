@@ -196,6 +196,8 @@ V1 当前包含：
 
 目标：先发布历史风险教育 MVP。
 
+进入本阶段前，必须先按 [`REPORT_MIGRATION_SPEC.md`](REPORT_MIGRATION_SPEC.md) 完成“股票风险分析与报告”迁移。RiskPilot 包含报告与历史挑战两条产品路径，只完成挑战接口不视为具备小程序接入条件。
+
 前置 HTTP 适配层：
 
 - [x] 创建独立 `/api/v2` FastAPI 应用，所有业务请求经 Harness 编排器执行。

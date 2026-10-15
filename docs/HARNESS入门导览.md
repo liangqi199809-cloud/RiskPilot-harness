@@ -103,6 +103,14 @@ Harness（上下文、注册中心、策略、审计）
   → 返回统一 ToolResponse
 ```
 
+### 第十步：模型解释边界
+
+- `ModelGateway` 定义统一模型接口，后续更换模型供应商不影响风险、回放和评分工具。
+- `ToolResultExplainer` 只接收已经成功的 `ToolResponse`，并把完整版本和快照信息作为权威依据交给模型。
+- 提示词使用 `tool-explanation-v1` 版本，明确禁止模型修改数字、补造事实、承诺收益或给出实盘指令。
+- `OfflineModelGateway` 在没有模型服务时明确返回 `model_offline`，不会拿预设文案冒充真实 AI 推理。
+- 当前先完成边界和离线降级；下一步再把 V1 的 OpenAI/DeepSeek 调用迁移成可替换适配器。
+
 ## 5. 四个最重要的编号
 
 | 字段 | 回答的问题 | 示例 |

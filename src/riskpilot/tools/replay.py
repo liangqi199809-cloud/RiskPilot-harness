@@ -126,6 +126,27 @@ class DrawHistoryCaseTool:
         return ToolResponse(success=True, data=_result_for(experiment), meta=_meta(self.name, context, experiment))
 
 
+class GetReplaySessionTool:
+    """Return the current server-owned state so clients can safely resume."""
+
+    name = "get_replay_session"
+    version = TOOL_VERSION
+
+    def __init__(self, sessions: ReplaySessionRepository = DEFAULT_REPLAY_SESSIONS) -> None:
+        self.sessions = sessions
+
+    def invoke(self, context: RuntimeContext, arguments: dict[str, Any]) -> ToolResponse[dict[str, Any]]:
+        experiment = None
+        try:
+            experiment = self.sessions.get(str(arguments["experiment_id"]))
+            experiment.assert_owner(context.user_id)
+        except PermissionError as exc:
+            return ToolResponse(success=False, data=None, meta=_meta(self.name, context, experiment), error=ErrorDetail(code="forbidden", message=str(exc)))
+        except (KeyError, LookupError, OSError, TypeError, ValueError) as exc:
+            return ToolResponse(success=False, data=None, meta=_meta(self.name, context, experiment), error=ErrorDetail(code="replay_unavailable", message=str(exc)))
+        return ToolResponse(success=True, data=_result_for(experiment), meta=_meta(self.name, context, experiment))
+
+
 class PreviewReplayPositionTool:
     """Preview a target position without changing the saved experiment."""
 

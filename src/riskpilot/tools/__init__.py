@@ -5,6 +5,7 @@ from riskpilot.tools.evidence import GetVisibleSnapshotTool, VerifyEvidenceTool
 from riskpilot.tools.extract_risk_inputs import ExtractRiskInputsTool
 from riskpilot.tools.replay import (
     DrawHistoryCaseTool,
+    GetReplaySessionTool,
     PreviewReplayPositionTool,
     SubmitReplayActionTool,
 )
@@ -16,6 +17,7 @@ __all__ = [
     "GetVisibleSnapshotTool",
     "GetLeaderboardTool",
     "DrawHistoryCaseTool",
+    "GetReplaySessionTool",
     "PreviewReplayPositionTool",
     "SubmitReplayActionTool",
     "SubmitReplayScoreTool",

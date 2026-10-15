@@ -13,7 +13,7 @@ from riskpilot.policies.base import PolicyDecision
 CORE_TOOLS = frozenset(
     {
         "calculate_risk_budget", "extract_risk_inputs", "get_visible_snapshot",
-        "verify_evidence", "draw_history_case", "preview_replay_position",
+        "verify_evidence", "draw_history_case", "get_replay_session", "preview_replay_position",
         "submit_replay_action", "submit_replay_score", "get_leaderboard",
     }
 )

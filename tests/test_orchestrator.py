@@ -146,7 +146,7 @@ class OrchestratorTests(unittest.TestCase):
             runtime.registry.names(),
             (
                 "calculate_risk_budget", "draw_history_case", "extract_risk_inputs",
-                "get_leaderboard", "get_visible_snapshot", "preview_replay_position",
+                "get_leaderboard", "get_replay_session", "get_visible_snapshot", "preview_replay_position",
                 "submit_replay_action", "submit_replay_score", "verify_evidence",
             ),
         )

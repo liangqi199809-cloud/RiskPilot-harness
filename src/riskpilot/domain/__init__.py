@@ -8,6 +8,10 @@ from riskpilot.domain.risk import (
     RiskBudgetOutput,
     calculate_risk_budget,
 )
+from riskpilot.domain.reporting import (
+    DeterministicReportCore,
+    build_deterministic_report_core,
+)
 
 __all__ = [
     "RiskBudgetInput",
@@ -18,6 +22,8 @@ __all__ = [
     "ReplayScore",
     "UserProfile",
     "calculate_risk_budget",
+    "DeterministicReportCore",
+    "build_deterministic_report_core",
     "extract_risk_input_features",
 ]
 

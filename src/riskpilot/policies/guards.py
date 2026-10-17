@@ -16,6 +16,7 @@ CORE_TOOLS = frozenset(
         "verify_evidence", "draw_history_case", "get_replay_session", "preview_replay_position",
         "submit_replay_action", "submit_replay_score", "get_leaderboard",
         "build_risk_report", "get_risk_report", "verify_report_integrity",
+        "list_risk_reports",
     }
 )
 
@@ -24,7 +25,7 @@ DEFAULT_SCENARIO_TOOLS: Mapping[ProductScenario, frozenset[str]] = {
     ProductScenario.INSTITUTION_TRAINING: CORE_TOOLS,
     ProductScenario.RESEARCH_SANDBOX: CORE_TOOLS,
     ProductScenario.PORTFOLIO_DEMO: frozenset(
-        {"calculate_risk_budget", "extract_risk_inputs", "get_visible_snapshot", "verify_evidence", "get_leaderboard", "get_risk_report", "verify_report_integrity"}
+        {"calculate_risk_budget", "extract_risk_inputs", "get_visible_snapshot", "verify_evidence", "get_leaderboard", "get_risk_report", "verify_report_integrity", "list_risk_reports"}
     ),
 }
 

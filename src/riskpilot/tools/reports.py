@@ -59,7 +59,15 @@ class BuildRiskReportTool:
             perspective_values = _perspectives(arguments)
             request_hash = sha256_value({
                 "owner_id": context.user_id, "snapshot_id": context.snapshot_id,
-                "as_of": context.as_of.isoformat(), "arguments": arguments,
+                "as_of": context.as_of.isoformat(),
+                "idempotency_key": key,
+                "stock_code": arguments["stock_code"],
+                "stock_name": arguments["stock_name"],
+                "capital": arguments["capital"], "max_loss": arguments["max_loss"],
+                "current_price": arguments["current_price"],
+                "stop_price": arguments["stop_price"], "shares": arguments["shares"],
+                "standard_loss": arguments["standard_loss"],
+                "price_rows": arguments["price_rows"],
                 "report_rule_version": RISK_REPORT_RULE_VERSION,
                 "domain_rule_version": REPORT_RULE_VERSION,
             })
@@ -118,4 +126,20 @@ class VerifyRiskReportIntegrityTool:
         except (KeyError, LookupError, TypeError, ValueError, OSError) as exc:
             return ToolResponse(False, None, _meta(self.name, context), error=ErrorDetail("report_unavailable", str(exc)))
         return ToolResponse(True, result, _meta(self.name, context))
+
+
+class ListRiskReportsTool:
+    name = "list_risk_reports"
+    version = TOOL_VERSION
+
+    def __init__(self, reports: SQLiteRiskReportRepository | None = None) -> None:
+        self.reports = reports or SQLiteRiskReportRepository(DEFAULT_DATABASE_PATH)
+
+    def invoke(self, context: RuntimeContext, arguments: dict[str, Any]) -> ToolResponse[dict[str, Any]]:
+        try:
+            limit = int(arguments.get("limit", 20))
+            reports = self.reports.list_for_owner(context.user_id, limit)
+        except (OSError, TypeError, ValueError) as exc:
+            return ToolResponse(False, None, _meta(self.name, context), error=ErrorDetail("report_unavailable", str(exc)))
+        return ToolResponse(True, {"reports": reports, "count": len(reports)}, _meta(self.name, context))
 

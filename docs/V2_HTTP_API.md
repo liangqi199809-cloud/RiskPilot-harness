@@ -47,8 +47,17 @@ Authorization: Bearer <development-token>
 | POST | `/api/v2/replay/actions` | 提交一关操作并推进状态 |
 | POST | `/api/v2/replay/scores` | 复算并提交已完成挑战的成绩 |
 | POST | `/api/v2/leaderboard/query` | 查询排行榜 |
+| POST | `/api/v2/reports` | 从服务端已验证快照生成并保存风险教育报告 |
+| POST | `/api/v2/reports/query` | 查询当前用户的一份完整报告和 Markdown |
+| POST | `/api/v2/reports/integrity` | 校验结构化报告与 Markdown 完整性 |
+| POST | `/api/v2/reports/list` | 查询当前用户的报告历史 |
 
 所有请求都明确携带带时区的 `as_of`；涉及风险计算时还要携带 `snapshot_id`。未知字段会被拒绝，避免客户端误传参数后被静默忽略。
+
+生成报告时，客户端不能提交价格、ATR、支撑位、股数或风险计算结果。服务端根据
+`stock_code + as_of + snapshot_id` 读取已验证历史快照，截断未来行情并重新计算。
+完整报告中的 `evidence.chart_data` 是小程序绘图所需的时间隔离 OHLCV；查询接口同时
+返回 Markdown，可由客户端保存为文件。
 
 ## 5. 小程序接入前仍需完成
 

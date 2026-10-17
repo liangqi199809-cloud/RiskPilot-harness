@@ -158,12 +158,17 @@ R3 报告同时保存结构化 JSON 与 Markdown，并分别计算 SHA-256；完
 
 ### R4：报告 HTTP API
 
-- [ ] `POST /api/v2/reports`：生成报告。
-- [ ] `POST /api/v2/reports/query`：读取当前用户的一份报告。
-- [ ] `POST /api/v2/reports/integrity`：验证报告哈希。
-- [ ] `POST /api/v2/reports/list`：查询当前用户的报告历史。
-- [ ] 返回小程序绘图所需的时间隔离 OHLCV，不返回未来数据。
-- [ ] 跑通“生成报告 → 查询 → 校验 → 下载 → 带同一股票进入挑战”。
+- [x] `POST /api/v2/reports`：生成报告。
+- [x] `POST /api/v2/reports/query`：读取当前用户的一份报告。
+- [x] `POST /api/v2/reports/integrity`：验证报告哈希。
+- [x] `POST /api/v2/reports/list`：查询当前用户的报告历史。
+- [x] 返回小程序绘图所需的时间隔离 OHLCV，不返回未来数据。
+- [x] 跑通“生成报告 → 查询 → 校验 → 下载 → 带同一股票进入挑战”。
+
+R4 的生成接口不接受客户端提交价格、ATR、支撑位、股数或标准损失。客户端只提交
+股票代码、风险边界、`as_of`、`snapshot_id` 和幂等键；API 从已校验的服务端快照
+提取风险输入和 OHLCV，再依次调用风险预算与报告工具。当前默认模型网关为明确的
+离线模式，确定性报告仍可生成；配置真实模型适配器后才会产生 AI 解释。
 
 ### R5：界面与小程序
 

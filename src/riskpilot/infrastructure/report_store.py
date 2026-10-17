@@ -80,6 +80,31 @@ class SQLiteRiskReportRepository:
             raise LookupError("report not found")
         return self._decode(row)
 
+    def list_for_owner(self, owner_id: str, limit: int = 20) -> list[dict[str, Any]]:
+        limit = max(1, min(int(limit), 100))
+        with self._connect() as connection:
+            rows = connection.execute(
+                """
+                SELECT report_id, snapshot_id, report_hash, created_at, payload_json
+                FROM risk_reports
+                WHERE owner_id = ?
+                ORDER BY created_at DESC, report_id DESC
+                LIMIT ?
+                """,
+                (owner_id, limit),
+            ).fetchall()
+        result = []
+        for row in rows:
+            payload = json.loads(row["payload_json"])
+            result.append({
+                "report_id": row["report_id"], "snapshot_id": row["snapshot_id"],
+                "stock": payload["stock"], "as_of": payload["as_of"],
+                "schema_version": payload["schema_version"],
+                "rule_version": payload["rule_version"],
+                "report_hash": row["report_hash"], "created_at": row["created_at"],
+            })
+        return result
+
     def save(self, report: StoredRiskReport) -> tuple[StoredRiskReport, bool]:
         payload_json = json.dumps(report.payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
         try:

@@ -66,3 +66,18 @@ class SubmitScoreRequest(HistoricalRequest):
 class LeaderboardRequest(HistoricalRequest):
     limit: int = Field(default=20, ge=1, le=100)
 
+
+class ReportCreateRequest(StockRequest):
+    snapshot_id: str = Field(min_length=1, max_length=160)
+    capital: float = Field(gt=0)
+    max_loss: float = Field(gt=0)
+    idempotency_key: str = Field(min_length=1, max_length=128)
+
+
+class ReportRequest(HistoricalRequest):
+    report_id: str = Field(min_length=1, max_length=64)
+
+
+class ReportListRequest(HistoricalRequest):
+    limit: int = Field(default=20, ge=1, le=100)
+

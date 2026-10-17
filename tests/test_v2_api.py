@@ -154,6 +154,76 @@ class V2ApiTests(unittest.TestCase):
         )
         self.assertEqual(invalid_trace.status_code, 422)
 
+    def test_complete_report_http_flow_uses_server_snapshot_and_user_isolation(self):
+        body = {
+            "as_of": AS_OF, "snapshot_id": "601318-2025-04-30",
+            "stock_code": "601318", "capital": 100000, "max_loss": 3000,
+            "idempotency_key": "api-report-1",
+        }
+        created = self.client.post("/api/v2/reports", json=body, headers=self.owner_headers)
+        self.assertEqual(created.status_code, 200, created.text)
+        data = created.json()["data"]
+        report = data["report"]
+        report_id = report["report_id"]
+        self.assertTrue(data["created"])
+        self.assertEqual(report["snapshot_id"], body["snapshot_id"])
+        self.assertEqual(report["stock"]["code"], "601318")
+        self.assertEqual(report["perspectives"]["technical"]["status"], "unavailable")
+        self.assertEqual(report["perspectives"]["fundamental"]["status"], "insufficient_evidence")
+        chart = report["evidence"]["chart_data"]
+        self.assertGreater(len(chart), 20)
+        self.assertTrue(all(row["日期"] <= "2025-04-30" for row in chart))
+
+        repeated = self.client.post("/api/v2/reports", json=body, headers=self.owner_headers)
+        self.assertEqual(repeated.status_code, 200)
+        self.assertFalse(repeated.json()["data"]["created"])
+        self.assertEqual(repeated.json()["data"]["report"]["report_id"], report_id)
+
+        query_body = {"as_of": AS_OF, "report_id": report_id}
+        queried = self.client.post("/api/v2/reports/query", json=query_body, headers=self.owner_headers)
+        checked = self.client.post("/api/v2/reports/integrity", json=query_body, headers=self.owner_headers)
+        listed = self.client.post(
+            "/api/v2/reports/list", json={"as_of": AS_OF, "limit": 10},
+            headers=self.owner_headers,
+        )
+        self.assertEqual(queried.status_code, 200)
+        self.assertIn("# RiskPilot 风险教育报告 V2", queried.json()["data"]["markdown"])
+        self.assertTrue(checked.json()["data"]["valid"])
+        self.assertEqual(listed.json()["data"]["count"], 1)
+        self.assertEqual(listed.json()["data"]["reports"][0]["report_id"], report_id)
+
+        forbidden = self.client.post(
+            "/api/v2/reports/query", json=query_body,
+            headers={"Authorization": "Bearer other-token"},
+        )
+        self.assertEqual(forbidden.status_code, 403)
+
+        challenge = self.client.post(
+            "/api/v2/replay/cases",
+            json={
+                "as_of": AS_OF, "stock_code": report["stock"]["code"],
+                "decision_mode": "monthly", "capital": 100000, "max_loss": 90000,
+            },
+            headers=self.owner_headers,
+        )
+        self.assertEqual(challenge.status_code, 200)
+        self.assertEqual(challenge.json()["data"]["stock_code"], report["stock"]["code"])
+
+    def test_report_generation_rejects_client_snapshot_mismatch_and_unknown_fields(self):
+        body = {
+            "as_of": AS_OF, "snapshot_id": "601318-2025-05-01",
+            "stock_code": "601318", "capital": 100000, "max_loss": 3000,
+            "idempotency_key": "bad-snapshot",
+        }
+        mismatch = self.client.post("/api/v2/reports", json=body, headers=self.owner_headers)
+        self.assertEqual(mismatch.status_code, 400)
+        self.assertIn("does not match", mismatch.json()["error"]["message"])
+
+        body["snapshot_id"] = "601318-2025-04-30"
+        body["current_price"] = 1
+        injected = self.client.post("/api/v2/reports", json=body, headers=self.owner_headers)
+        self.assertEqual(injected.status_code, 422)
+
 
 if __name__ == "__main__":
     unittest.main()

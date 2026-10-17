@@ -102,6 +102,13 @@ class ReportToolTests(unittest.TestCase):
         self.assertFalse(second.data["created"])
         self.assertEqual(first.data["report"]["report_id"], second.data["report"]["report_id"])
 
+        changed_explanation = report_arguments()
+        changed_explanation["perspectives"]["technical"]["summary"] = "模型重试产生的不同措辞。"
+        retried = self.build.invoke(self.owner, changed_explanation)
+        self.assertTrue(retried.success)
+        self.assertFalse(retried.data["created"])
+        self.assertEqual(retried.data["report"]["report_id"], first.data["report"]["report_id"])
+
         changed = report_arguments()
         changed["max_loss"] = 2_500
         conflict = self.build.invoke(self.owner, changed)

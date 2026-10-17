@@ -1,0 +1,113 @@
+<view class="page">
+  <view class="eyebrow">Historical risk report</view>
+  <view class="title small">先定义能承受的损失</view>
+  <view class="subtitle">系统使用服务端历史快照重新计算，页面不能提交股价、股数或止损结果。</view>
+
+  <view class="card stack" wx:if="{{!report}}">
+    <view>
+      <view class="label">股票代码（当前原型推荐 601318）</view>
+      <input class="input" type="number" value="{{stockCode}}" bindinput="setStock"/>
+    </view>
+    <view class="two-col">
+      <view>
+        <view class="label">模拟本金</view>
+        <input class="input" type="digit" value="{{capital}}" bindinput="setCapital"/>
+      </view>
+      <view>
+        <view class="label">最大损失预算</view>
+        <input class="input" type="digit" value="{{maxLoss}}" bindinput="setMaxLoss"/>
+      </view>
+    </view>
+    <view>
+      <view class="label">历史截止日期</view>
+      <picker mode="date" value="{{date}}" bindchange="setDate">
+        <view class="input picker">{{date}}</view>
+      </picker>
+    </view>
+    <button class="button" loading="{{loading}}" disabled="{{loading}}" bindtap="generate">{{loading ? '正在校验证据…' : '生成风险报告'}}</button>
+  </view>
+
+  <view class="error" wx:if="{{error}}">{{error}}</view>
+
+  <block wx:if="{{report}}">
+    <view class="report-head">
+      <view class="row">
+        <view>
+          <view class="eyebrow">{{report.stock.code}}</view>
+          <view class="report-name">{{report.stock.name}}</view>
+        </view>
+        <view class="pill">V2 可追溯</view>
+      </view>
+      <view class="report-intro">这是一份历史风险教育报告。先看纪律检查，再看价格和多视角解释。</view>
+    </view>
+
+    <view class="section-title">01 · 风险纪律</view>
+    <view class="card">
+      <view class="status-line" wx:for="{{report.deterministic_core.discipline_checks}}" wx:key="check_id">
+        <view class="status-dot {{item.status}}"></view>
+        <view>
+          <view>{{item.label}}</view>
+          <view class="card-note">{{item.detail}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-title">02 · 先看三个数字</view>
+    <view class="card metric-grid">
+      <view class="metric">
+        <view class="metric-label">损失预算</view>
+        <view class="metric-value">¥{{report.user_boundaries.max_loss}}</view>
+      </view>
+      <view class="metric">
+        <view class="metric-label">历史情景参考位</view>
+        <view class="metric-value">¥{{report.deterministic_core.scenario_reference.price}}</view>
+      </view>
+      <view class="metric full">
+        <view class="metric-label">近期趋势</view>
+        <view class="metric-value">{{report.deterministic_core.market_trend.trend_label}}</view>
+        <view class="card-note">{{report.deterministic_core.market_trend.basis}}</view>
+      </view>
+    </view>
+
+    <view class="section-title">03 · 截止日之前的价格</view>
+    <view class="card">
+      <view class="price-row price-head"><text>日期</text><text>收盘</text><text>最高 / 最低</text></view>
+      <view class="price-row" wx:for="{{chartRows}}" wx:key="date">
+        <text>{{item.shortDate}}</text><text>{{item.close}}</text><text>{{item.high}} / {{item.low}}</text>
+      </view>
+      <view class="footer-note">只展示最近 8 个可见交易日；报告内保留完整时间隔离 OHLCV。</view>
+    </view>
+
+    <view class="section-title">04 · 四个观察视角</view>
+    <view class="card">
+      <view class="perspective">
+        <view class="row"><view class="card-title mini">资金面</view><view class="pill">确定性</view></view>
+        <view class="card-note">{{report.deterministic_core.capital_flow.volume_price_status}}；OBV {{report.deterministic_core.capital_flow.obv_trend}}。这里只是历史量价估算，不是真实主力资金。</view>
+      </view>
+      <view class="perspective" wx:for="{{perspectives}}" wx:key="key">
+        <view class="row"><view class="card-title mini">{{item.label}}</view><view class="pill {{item.status === 'available' ? '' : 'muted'}}">{{item.status}}</view></view>
+        <view class="card-note">{{item.summary}}</view>
+      </view>
+    </view>
+
+    <view class="section-title">05 · 证据与完整性</view>
+    <view class="card">
+      <view class="metric"><view class="metric-label">快照</view><view class="hash">{{report.snapshot_id}}</view></view>
+      <view class="metric"><view class="metric-label">报告哈希</view><view class="hash">{{report.report_hash}}</view></view>
+      <view wx:if="{{integrity}}" class="integrity {{integrity.valid ? 'good' : 'bad'}}">{{integrity.valid ? 'JSON 与 Markdown 校验通过' : '发现内容变化，请停止使用'}}</view>
+      <button class="button secondary" bindtap="verify">校验报告</button>
+      <button class="button ghost" bindtap="copyMarkdown">复制 Markdown</button>
+    </view>
+
+    <button class="button challenge" bindtap="openChallenge">用同一股票进入时间穿越挑战</button>
+    <button class="button ghost" bindtap="toggleHistory">{{showHistory ? '收起历史报告' : '查看我的历史报告'}}</button>
+    <view class="card" wx:if="{{showHistory}}">
+      <view wx:if="{{!history.length}}" class="muted">还没有其他报告。</view>
+      <view class="history-row" wx:for="{{history}}" wx:key="report_id" data-id="{{item.report_id}}" bindtap="openHistory">
+        <view><view>{{item.stock.name}} · {{item.stock.code}}</view><view class="card-note">{{item.as_of}}</view></view>
+        <view>→</view>
+      </view>
+    </view>
+    <button class="button ghost" bindtap="reset">返回修改输入</button>
+  </block>
+</view>

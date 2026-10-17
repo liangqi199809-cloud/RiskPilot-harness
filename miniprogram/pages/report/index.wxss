@@ -1,0 +1,20 @@
+.small { font-size: 44rpx; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18rpx; }
+.picker { display: flex; align-items: center; }
+.report-head { margin: 20rpx -28rpx 0; padding: 42rpx 32rpx; background: #1c3127; color: #f6faf7; }
+.report-name { margin-top: 8rpx; font-size: 46rpx; font-weight: 700; }
+.report-intro { margin-top: 24rpx; color: #b9c8c0; line-height: 1.6; }
+.metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 28rpx; }
+.metric-grid .full { grid-column: 1 / 3; }
+.price-row { display: grid; grid-template-columns: 1fr .7fr 1.2fr; padding: 14rpx 0; border-bottom: 1rpx solid #edf0ee; color: #44564d; font-size: 24rpx; }
+.price-row text:nth-child(2), .price-row text:nth-child(3) { text-align: right; }
+.price-head { color: #89948e; font-size: 21rpx; }
+.perspective { padding: 24rpx 0; border-bottom: 1rpx solid #edf0ee; }
+.perspective:last-child { border-bottom: 0; }
+.mini { font-size: 29rpx; }
+.hash { margin-top: 8rpx; color: #42594e; font-family: monospace; font-size: 20rpx; word-break: break-all; }
+.integrity { margin-top: 22rpx; padding: 18rpx; border-radius: 14rpx; }
+.integrity.good { background: #e7f4ec; color: #176541; }
+.integrity.bad { background: #fff0ed; color: #9a392d; }
+.challenge { margin-top: 38rpx; background: #1c3127; }
+.history-row { display: flex; justify-content: space-between; align-items: center; padding: 22rpx 0; border-bottom: 1rpx solid #edf0ee; }

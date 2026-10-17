@@ -1,0 +1,67 @@
+<view class="page">
+  <view class="eyebrow">Time travel challenge</view>
+  <view class="title small">你看不到下一段行情</view>
+  <view class="subtitle">每轮只提交一次目标持仓。服务端保存进度并重新计算成绩，页面不能自报盈亏。</view>
+
+  <view class="card stack" wx:if="{{!experiment}}">
+    <view>
+      <view class="label">股票代码</view>
+      <input class="input" type="number" value="{{stockCode}}" bindinput="setStock"/>
+    </view>
+    <view>
+      <view class="label">决策频率</view>
+      <radio-group bindchange="setMode" class="mode-row">
+        <label><radio value="monthly" checked="{{mode === 'monthly'}}" color="#176b4a"/>月度 · 4 轮</label>
+        <label><radio value="weekly" checked="{{mode === 'weekly'}}" color="#176b4a"/>周度 · 17 轮</label>
+      </radio-group>
+    </view>
+    <button class="button" loading="{{loading}}" bindtap="start">抽取历史实验</button>
+    <button class="button ghost" bindtap="openReport">先查看这只股票的风险报告</button>
+  </view>
+
+  <view class="error" wx:if="{{error}}">{{error}}</view>
+
+  <block wx:if="{{experiment}}">
+    <view class="progress-wrap">
+      <view class="row"><text>实验进度</text><text>{{experiment.step}} / {{experiment.total_decisions}}</text></view>
+      <view class="progress"><view class="progress-bar" style="width: {{experiment.step / experiment.total_decisions * 100}}%"></view></view>
+    </view>
+
+    <view class="card" wx:if="{{!experiment.finished}}">
+      <view class="pill">历史节点 {{experiment.cutoff}}</view>
+      <view class="decision-title">这一轮，你准备持有多少市值？</view>
+      <input class="input decision-input" type="digit" value="{{targetValue}}" bindinput="setTarget" placeholder="例如 30000"/>
+      <button class="button secondary" bindtap="preview">只预览，不推进时间</button>
+      <view class="preview" wx:if="{{preview}}">
+        <view class="metric-label">预计股数</view><view class="metric-value">{{preview.preview_shares}} 股</view>
+        <view class="card-note">预览不会修改服务端实验进度。</view>
+      </view>
+      <button class="button" loading="{{loading}}" bindtap="submit">确认并进入下一段历史</button>
+      <button class="button ghost" data-skip="{{true}}" bindtap="submit">本轮不操作</button>
+    </view>
+
+    <view class="card" wx:if="{{experiment.account}}">
+      <view class="card-title">账户轨迹</view>
+      <view class="account-grid">
+        <view class="metric"><view class="metric-label">现金</view><view class="metric-value">{{experiment.account.cash}}</view></view>
+        <view class="metric"><view class="metric-label">总资产</view><view class="metric-value">{{experiment.account.equity}}</view></view>
+        <view class="metric"><view class="metric-label">持仓股数</view><view class="metric-value">{{experiment.account.shares}}</view></view>
+        <view class="metric"><view class="metric-label">累计盈亏</view><view class="metric-value">{{experiment.account.pnl}}</view></view>
+      </view>
+    </view>
+
+    <view class="finish" wx:if="{{experiment.finished}}">
+      <view class="eyebrow">Experiment complete</view>
+      <view class="finish-title">实验结束，检查的是纪律，不是一次输赢。</view>
+      <button class="button" wx:if="{{!scored}}" bindtap="submitScore">提交服务端复算成绩</button>
+      <view class="card" wx:if="{{leaderboard.length}}">
+        <view class="card-title mini">排行榜</view>
+        <view class="rank-row" wx:for="{{leaderboard}}" wx:key="user_id">
+          <text>{{item.rank}} · {{item.display_name}}</text><text>{{item.pnl_pct}}%</text>
+        </view>
+      </view>
+      <button class="button ghost" bindtap="restart">重新开始</button>
+      <button class="button ghost" bindtap="openReport">查看同一股票的风险报告</button>
+    </view>
+  </block>
+</view>

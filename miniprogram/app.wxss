@@ -1,0 +1,38 @@
+page {
+  background: #f5f7f4;
+  color: #17211c;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+  font-size: 28rpx;
+}
+
+.page { padding: 32rpx 28rpx 64rpx; }
+.eyebrow { color: #527064; font-size: 22rpx; letter-spacing: 3rpx; text-transform: uppercase; }
+.title { margin-top: 12rpx; font-size: 52rpx; line-height: 1.18; font-weight: 700; }
+.subtitle { margin-top: 18rpx; color: #607069; line-height: 1.65; }
+.card { margin-top: 24rpx; padding: 30rpx; background: #fff; border: 1rpx solid #dfe6e1; border-radius: 28rpx; box-shadow: 0 10rpx 32rpx rgba(26, 58, 44, .06); }
+.card-title { font-size: 34rpx; font-weight: 650; }
+.card-note { margin-top: 12rpx; color: #66756e; line-height: 1.55; }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 20rpx; }
+.stack { display: flex; flex-direction: column; gap: 18rpx; }
+.pill { display: inline-flex; padding: 8rpx 16rpx; border-radius: 999rpx; background: #e9f2ed; color: #205d42; font-size: 22rpx; }
+.pill.warn { background: #fff2d9; color: #8a5b00; }
+.pill.muted { background: #eef0ee; color: #69736e; }
+.button { margin-top: 24rpx; border: 0; border-radius: 18rpx; background: #176b4a; color: #fff; font-size: 28rpx; font-weight: 600; }
+.button::after { border: 0; }
+.button.secondary { background: #e8f1ec; color: #17593f; }
+.button.ghost { background: transparent; color: #34584a; border: 1rpx solid #cbd8d1; }
+.button[disabled] { background: #dfe5e1; color: #8b9690; }
+.label { margin-bottom: 10rpx; color: #52645b; font-size: 24rpx; }
+.input { box-sizing: border-box; width: 100%; height: 84rpx; padding: 0 22rpx; background: #f8faf8; border: 1rpx solid #d9e2dc; border-radius: 16rpx; }
+.section-title { margin-top: 34rpx; font-size: 30rpx; font-weight: 650; }
+.metric { padding: 20rpx 0; border-bottom: 1rpx solid #edf0ee; }
+.metric:last-child { border-bottom: 0; }
+.metric-label { color: #65736c; font-size: 24rpx; }
+.metric-value { margin-top: 6rpx; font-size: 31rpx; font-weight: 620; }
+.status-line { display: flex; align-items: flex-start; gap: 14rpx; padding: 18rpx 0; border-bottom: 1rpx solid #edf0ee; }
+.status-dot { width: 18rpx; height: 18rpx; margin-top: 10rpx; border-radius: 50%; background: #2c8c62; flex: none; }
+.status-dot.review { background: #d7971f; }
+.status-dot.blocked { background: #bd4b4b; }
+.muted { color: #718079; }
+.error { margin-top: 20rpx; padding: 20rpx; border-radius: 16rpx; background: #fff0ed; color: #9a392d; }
+.footer-note { margin-top: 36rpx; color: #7b8781; font-size: 22rpx; line-height: 1.6; }

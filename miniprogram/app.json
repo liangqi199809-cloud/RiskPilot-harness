@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/home/index",
+    "pages/report/index",
+    "pages/replay/index",
+    "pages/settings/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "RiskPilot",
+    "navigationBarBackgroundColor": "#F5F7F4",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F5F7F4",
+    "backgroundTextStyle": "light"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

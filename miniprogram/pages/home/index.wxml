@@ -1,0 +1,34 @@
+<view class="page">
+  <view class="eyebrow">Risk discipline lab</view>
+  <view class="title">先看清风险，<br/>再做一次决定。</view>
+  <view class="subtitle">RiskPilot 是历史风险教育工具，不连接证券账户，也不提供买卖建议。</view>
+
+  <view class="card entry" bindtap="openReport">
+    <view class="row">
+      <view class="entry-index">01</view>
+      <view class="pill">建议先体验</view>
+    </view>
+    <view class="card-title entry-title">风险报告</view>
+    <view class="card-note">输入本金与损失预算，查看历史情景参考位、风险纪律和证据边界。</view>
+    <view class="entry-link">生成一份报告 →</view>
+  </view>
+
+  <view class="card entry replay" bindtap="openReplay">
+    <view class="row">
+      <view class="entry-index">02</view>
+      <view class="pill muted">连续决策</view>
+    </view>
+    <view class="card-title entry-title">时间穿越挑战</view>
+    <view class="card-note">在不知道后续行情时连续选择仓位，检验自己能否遵守风险纪律。</view>
+    <view class="entry-link">开始历史实验 →</view>
+  </view>
+
+  <view class="setup row" bindtap="openSettings">
+    <view>
+      <view class="setup-title">本地联调</view>
+      <view class="setup-note">{{configured ? '开发服务已经配置' : '需要填写 API 地址与开发令牌'}}</view>
+    </view>
+    <view class="status-dot {{configured ? '' : 'review'}}"></view>
+  </view>
+  <view class="footer-note">历史数据与模拟结果不代表未来表现。公众上线前仍需完成微信登录、HTTPS 域名、备案与数据授权核验。</view>
+</view>

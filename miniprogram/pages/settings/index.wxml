@@ -1,0 +1,17 @@
+<view class="page">
+  <view class="eyebrow">Development only</view>
+  <view class="title small">本地联调设置</view>
+  <view class="subtitle">这些信息只保存在当前开发设备，不会写入 GitHub。正式上线时将由微信登录替代开发令牌。</view>
+  <view class="card stack">
+    <view>
+      <view class="label">V2 API 地址</view>
+      <input class="input" value="{{baseUrl}}" bindinput="setBase" placeholder="http://127.0.0.1:8001"/>
+    </view>
+    <view>
+      <view class="label">本地开发令牌</view>
+      <input class="input" password value="{{token}}" bindinput="setToken" placeholder="不要提交到代码仓库"/>
+    </view>
+    <button class="button" bindtap="save">保存到本机</button>
+  </view>
+  <view class="footer-note">微信开发者工具中需要暂时关闭“校验合法域名”。真机和正式版本必须使用已备案的 HTTPS 域名。</view>
+</view>

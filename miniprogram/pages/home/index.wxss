@@ -1,0 +1,11 @@
+.entry { position: relative; overflow: hidden; }
+.entry:active { transform: scale(.99); }
+.entry-index { color: #8ca198; font-size: 24rpx; font-weight: 700; letter-spacing: 2rpx; }
+.entry-title { margin-top: 32rpx; font-size: 42rpx; }
+.entry-link { margin-top: 30rpx; color: #176b4a; font-weight: 650; }
+.replay { background: #1d3128; color: #f5faf7; border-color: #1d3128; }
+.replay .card-note { color: #b8c8c0; }
+.replay .entry-link { color: #9fdbbd; }
+.setup { margin-top: 28rpx; padding: 24rpx 6rpx; }
+.setup-title { font-weight: 600; }
+.setup-note { margin-top: 6rpx; color: #74827b; font-size: 23rpx; }

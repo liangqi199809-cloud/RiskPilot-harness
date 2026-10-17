@@ -10,17 +10,21 @@ from riskpilot.tools.replay import (
     SubmitReplayActionTool,
 )
 from riskpilot.tools.scoring import GetLeaderboardTool, SubmitReplayScoreTool
+from riskpilot.tools.reports import BuildRiskReportTool, GetRiskReportTool, VerifyRiskReportIntegrityTool
 
 __all__ = [
     "CalculateRiskBudgetTool",
+    "BuildRiskReportTool",
     "ExtractRiskInputsTool",
     "GetVisibleSnapshotTool",
     "GetLeaderboardTool",
     "DrawHistoryCaseTool",
     "GetReplaySessionTool",
+    "GetRiskReportTool",
     "PreviewReplayPositionTool",
     "SubmitReplayActionTool",
     "SubmitReplayScoreTool",
     "VerifyEvidenceTool",
+    "VerifyRiskReportIntegrityTool",
 ]
 

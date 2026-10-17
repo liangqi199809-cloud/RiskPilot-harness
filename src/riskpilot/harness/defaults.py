@@ -9,19 +9,23 @@ from riskpilot.harness.registry import ToolRegistry
 from riskpilot.infrastructure.audit_store import SQLiteAuditRecorder
 from riskpilot.infrastructure.evidence_store import ReplayEvidenceRepository
 from riskpilot.infrastructure.leaderboard_store import SQLiteLeaderboardRepository
+from riskpilot.infrastructure.report_store import SQLiteRiskReportRepository
 from riskpilot.infrastructure.replay_sessions import DEFAULT_DATABASE_PATH, SQLiteReplaySessionRepository
 from riskpilot.policies.guards import ScenarioToolPolicy, SnapshotRequiredPolicy
 from riskpilot.tools import (
+    BuildRiskReportTool,
     CalculateRiskBudgetTool,
     DrawHistoryCaseTool,
     ExtractRiskInputsTool,
     GetLeaderboardTool,
     GetReplaySessionTool,
+    GetRiskReportTool,
     GetVisibleSnapshotTool,
     PreviewReplayPositionTool,
     SubmitReplayActionTool,
     SubmitReplayScoreTool,
     VerifyEvidenceTool,
+    VerifyRiskReportIntegrityTool,
 )
 from riskpilot.tools.evidence import DEFAULT_REPLAY_ROOT
 
@@ -34,10 +38,14 @@ def build_default_orchestrator(
 
     sessions = SQLiteReplaySessionRepository(database_path)
     leaderboard = SQLiteLeaderboardRepository(database_path)
+    reports = SQLiteRiskReportRepository(database_path)
     evidence = ReplayEvidenceRepository(replay_root)
     registry = ToolRegistry()
     for tool in (
         CalculateRiskBudgetTool(),
+        BuildRiskReportTool(reports),
+        GetRiskReportTool(reports),
+        VerifyRiskReportIntegrityTool(reports),
         GetVisibleSnapshotTool(evidence),
         VerifyEvidenceTool(evidence),
         ExtractRiskInputsTool(evidence),

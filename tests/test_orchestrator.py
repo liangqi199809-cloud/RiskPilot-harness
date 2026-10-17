@@ -145,9 +145,11 @@ class OrchestratorTests(unittest.TestCase):
         self.assertEqual(
             runtime.registry.names(),
             (
-                "calculate_risk_budget", "draw_history_case", "extract_risk_inputs",
-                "get_leaderboard", "get_replay_session", "get_visible_snapshot", "preview_replay_position",
+                "build_risk_report", "calculate_risk_budget", "draw_history_case",
+                "extract_risk_inputs", "get_leaderboard", "get_replay_session",
+                "get_risk_report", "get_visible_snapshot", "preview_replay_position",
                 "submit_replay_action", "submit_replay_score", "verify_evidence",
+                "verify_report_integrity",
             ),
         )
 

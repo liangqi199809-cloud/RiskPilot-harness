@@ -146,11 +146,15 @@ R2 的三个解释器位于 `src/riskpilot/agents/report_perspectives.py`，通�
 
 ### R3：报告生成与持久化
 
-- [ ] 创建确定性 `build_risk_report` 工具。
-- [ ] 创建 `get_risk_report` 和 `verify_report_integrity` 工具。
-- [ ] 使用 `report_id`、内部 `user_id`、`snapshot_id` 和版本信息保存 SQLite 报告。
-- [ ] 保存最终结构化报告和 Markdown，不使用仅按股票代码的进程内缓存。
-- [ ] 增加跨用户读取、内容篡改、重复请求和重启恢复测试。
+- [x] 创建确定性 `build_risk_report` 工具。
+- [x] 创建 `get_risk_report` 和 `verify_report_integrity` 工具。
+- [x] 使用 `report_id`、内部 `user_id`、`snapshot_id` 和版本信息保存 SQLite 报告。
+- [x] 保存最终结构化报告和 Markdown，不使用仅按股票代码的进程内缓存。
+- [x] 增加跨用户读取、内容篡改、重复请求和重启恢复测试。
+
+R3 报告同时保存结构化 JSON 与 Markdown，并分别计算 SHA-256；完整性工具会同时校验
+二者。相同用户的相同幂等键和相同输入返回原报告，不重复生成；同一幂等键更换输入会
+被拒绝。V1 的进程内报告缓存仍只服务旧页面，V2 报告不再依赖该缓存。
 
 ### R4：报告 HTTP API
 

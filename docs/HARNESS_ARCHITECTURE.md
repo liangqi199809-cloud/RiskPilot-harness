@@ -119,7 +119,9 @@ Harness 是 V2 的核心外壳，负责决定“谁可以在什么上下文中�
 | `preview_position` | 风险 | 预览模拟操作的损失情景 | 否 |
 | `submit_replay_action` | 回放 | 提交一轮决策并推进状态 | 是 |
 | `calculate_discipline_score` | 评分 | 计算纪律评分与违规项 | 否 |
-| `generate_review_report` | 报告 | 汇总规则结果和 Agent 解释 | 否 |
+| `build_risk_report` | 报告 | 汇总确定性结果和受证据约束的解释，并持久化 | 是 |
+| `get_risk_report` | 报告 | 按用户读取已保存的完整报告 | 否 |
+| `verify_report_integrity` | 报告 | 校验结构化报告和 Markdown 是否被修改 | 否 |
 | `verify_evidence` | 证据 | 校验证据文件和哈希 | 否 |
 
 每个工具至少返回：

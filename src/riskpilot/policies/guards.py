@@ -15,6 +15,7 @@ CORE_TOOLS = frozenset(
         "calculate_risk_budget", "extract_risk_inputs", "get_visible_snapshot",
         "verify_evidence", "draw_history_case", "get_replay_session", "preview_replay_position",
         "submit_replay_action", "submit_replay_score", "get_leaderboard",
+        "build_risk_report", "get_risk_report", "verify_report_integrity",
     }
 )
 
@@ -23,7 +24,7 @@ DEFAULT_SCENARIO_TOOLS: Mapping[ProductScenario, frozenset[str]] = {
     ProductScenario.INSTITUTION_TRAINING: CORE_TOOLS,
     ProductScenario.RESEARCH_SANDBOX: CORE_TOOLS,
     ProductScenario.PORTFOLIO_DEMO: frozenset(
-        {"calculate_risk_budget", "extract_risk_inputs", "get_visible_snapshot", "verify_evidence", "get_leaderboard"}
+        {"calculate_risk_budget", "extract_risk_inputs", "get_visible_snapshot", "verify_evidence", "get_leaderboard", "get_risk_report", "verify_report_integrity"}
     ),
 }
 
@@ -50,7 +51,7 @@ class ScenarioToolPolicy:
 class SnapshotRequiredPolicy:
     """Require direct calculations to declare the evidence snapshot they use."""
 
-    protected_tools: frozenset[str] = frozenset({"calculate_risk_budget"})
+    protected_tools: frozenset[str] = frozenset({"calculate_risk_budget", "build_risk_report"})
 
     def before_call(self, context: RuntimeContext, tool_name: str, arguments: dict[str, Any]) -> PolicyDecision:
         if tool_name in self.protected_tools and not context.snapshot_id:
